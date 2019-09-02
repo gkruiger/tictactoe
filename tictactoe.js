@@ -1,11 +1,14 @@
+// This class handles the graphical part
 class TicTacToe {
-    constructor( context ) {
+    constructor( context, language ) {
         this.context = context;
+        this.language = language;
         this.winner = '';
         this.player = 'X';
         this.resetGame();
     }
 
+    // Draws the 2 vertical and 2 horizontal lines
     drawGrid() {
         this.context.clearRect(0, 0, 300, 300);
         this.context.lineWidth = 5;
@@ -23,6 +26,8 @@ class TicTacToe {
         this.context.closePath();
     }
 
+    // Input: position on the board (0..9)
+    // Ouput: true of position is empty, false otherwise
     positionIsEmpty( position ) {
         if( this.positions[ position ] == '-' ) {
             return true;
@@ -31,7 +36,9 @@ class TicTacToe {
         }
     }
 
+    // Sets a player (X or O) at the given position
     setPlayerAtPosition( player, position ) {
+        // Place the player
         this.positions[ position ] = player;
         if( player == 'X' ) {
             this.drawX( position );
@@ -41,9 +48,11 @@ class TicTacToe {
             this.isItXsTurn = true;
         }
 
+        // Check for win/loose/draw
         this.checkGameState();
     }
 
+    // Draws an X at the given position
     drawX( position ) {
         var cellX = position%3;
         var cellY = Math.floor(position/3 )
@@ -62,6 +71,7 @@ class TicTacToe {
         this.context.closePath();
     }
 
+    // Draws an O at the given positon
     drawO( position ) {
         var cellX = position%3;
         var cellY = Math.floor(position/3 )
@@ -79,7 +89,9 @@ class TicTacToe {
         this.context.closePath();
     }
 
+
     checkGameState() {
+        // All possible ways of winning the game
         var winningPatterns = [
             [0, 1, 2 ],
             [3, 4, 5 ],
@@ -91,6 +103,7 @@ class TicTacToe {
             [2, 4, 6 ]
         ];
 
+        // Check if there are no positions to fill anymore
         this.gameHasEnded = true;    
         this.winner = '';
         for ( var i = 0; i < this.positions.length; i++) {
@@ -100,6 +113,7 @@ class TicTacToe {
             }
         }
         
+        // Check all winning patterns for a match
         for ( var i = 0; i < winningPatterns.length; i++) {
             if ( 
                 this.positions[ winningPatterns[ i ][ 0 ] ] == this.positions[ winningPatterns[ i ][ 1 ] ] &&
@@ -113,17 +127,27 @@ class TicTacToe {
             }
         }
 
+        // Adjust info message based
         if (this.gameHasEnded) {
             let text = "";
-            switch (this.winner) {
-                case 'X': text = 'X heeft gewonnen. Klik om opnieuw te beginnen.'; break;
-                case 'O': text = 'O heeft gewonnen. Klik om opnieuw te beginnen.'; break;
-                case '': text = 'Gelijkspel. Klik om opnieuw te beginnen.'; break;
+            if (this.language == 'EN') {
+                switch (this.winner) {
+                    case 'X': text = 'X won. Click to start again.'; break;
+                    case 'O': text = 'O won. Click to start again'; break;
+                    case '': text = 'A draw. Click to start again.'; break;
+                }
+            } else {
+                switch (this.winner) {
+                    case 'X': text = 'X heeft gewonnen. Klik om opnieuw te beginnen.'; break;
+                    case 'O': text = 'O heeft gewonnen. Klik om opnieuw te beginnen.'; break;
+                    case '': text = 'Gelijkspel. Klik om opnieuw te beginnen.'; break;
+                }
             }
             document.getElementById('tttmessage').innerHTML = text;
         }
     }
 
+    // Draws a line marking the winning pattern
     drawWin( posA, posB ) {
         var posAX = posA%3 *100+50;
         var posAY = Math.floor( posA/3 )*100+50
@@ -139,6 +163,7 @@ class TicTacToe {
         this.context.closePath();
     }
 
+    // Resets the game (o rly?)
     resetGame() {
         this.positions = [ 
             '-', '-', '-', 
@@ -152,25 +177,41 @@ class TicTacToe {
             let move = new IntelligentForceAI().getBestMove(ttt.getBoard(), 'X');
             this.setPlayerAtPosition( 'X', move );    
         }
-        document.getElementById('tttmessage').innerHTML = 'Plaats je ' + this.player + '.';
+        if (this.language == "EN") {
+            document.getElementById('tttmessage').innerHTML = 'Place your ' + this.player + '.';
+        } else {
+            document.getElementById('tttmessage').innerHTML = 'Plaats je ' + this.player + '.';
+        }
     }
 
+    // Returns the board a a string
     getBoard() {
         return this.positions.join('');
     }
 
+    // Makes the player O instead of X and vice versa
     changePlayer() {
         this.player == 'X' ? this.player = 'O' : this.player = 'X';
         this.resetGame();
     }
 }
 
+// Handling the events
 document.onreadystatechange = function () {
     if (document.readyState === 'complete') {
 
+        // Initialize instance
         tttcanvas = document.getElementById('tttcanvas');
         tttcontext = tttcanvas.getContext('2d');
-        ttt = new TicTacToe( tttcontext );
+        ttt = new TicTacToe( tttcontext, 'EN' ); // Change this to NL if you want the Dutch version
+
+        if (ttt.language == 'EN') {
+            document.getElementById('tttbutton').innerHTML = 'Change O/X';
+        } else {
+            document.getElementById('tttbutton').innerHTML = 'Wissel O/X';
+        }
+
+        // Handling clicks on the board
         tttcanvas.addEventListener('click', (e) => {
             x = e.offsetX / 100 | 0;
             y = e.offsetY / 100 | 0;
@@ -200,6 +241,7 @@ document.onreadystatechange = function () {
             }
         });
 
+        // Handling clicks on the change O/X button
         button = document.getElementById('tttbutton');
         button.addEventListener('click', (e) => {
             ttt.changePlayer();

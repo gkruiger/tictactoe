@@ -251,7 +251,7 @@ class TicTacToeSimulator{
         console.log('Draw  : ' + draw);
     }
 }
-
+/*
 // Run the simulator
 ticTacToeSimulator = new TicTacToeSimulator(
     100,                        // Set the number of games you want to run
@@ -259,3 +259,4 @@ ticTacToeSimulator = new TicTacToeSimulator(
     new IntelligentForceAI()    // Either choose new Randompower() or new IntelligentForceAI()
 );
 ticTacToeSimulator.run();
+*/
