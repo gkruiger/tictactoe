@@ -1,3 +1,4 @@
+// This class holds the state of the game
 class TicTacToeGameState {
     constructor(board, player) {
         this.board = board;
@@ -5,6 +6,7 @@ class TicTacToeGameState {
         this.status = 'running';
     }
 
+    // Getters/setters
     getBoard() { return this.board; }
     getPlayer() { return this.player; }
     getStatus() { return this.status; }
@@ -36,6 +38,7 @@ class TicTacToeGameState {
     }
 }
 
+// This class handles all the logic of the game
 class TicTacToeGameStateEngine {
     constructor() {
         this.winningPatterns = [
@@ -140,6 +143,7 @@ class TicTacToeGameStateEngine {
     }
 }
 
+// This class acts as a random player, making a random move each turn
 class RandomPower{
     constructor() {
     }
@@ -159,6 +163,7 @@ class RandomPower{
     }
 }
 
+// This class acts as a mighty brute force AI, making the best move possible each turn
 class IntelligentForceAI {
     constructor() {
         this.ticTacToeGameEngine = new TicTacToeGameStateEngine();
@@ -167,6 +172,7 @@ class IntelligentForceAI {
 
     // Input:   gamestate
     // Output:  gamestate including best move (move with the highest/lowest value for X/O).
+    //          And yes, it's recursive :)
     getBestMoveForGameState(ticTacToeGameState) {
         if (ticTacToeGameState.getStatus() == 'running') {
             let availableMoves = this.ticTacToeGameEngine.getAvailableMoves(ticTacToeGameState);
@@ -205,6 +211,7 @@ class IntelligentForceAI {
     }
 }
 
+// This class runs the simulator using the engine and the random/AI class
 class TicTacToeSimulator{
     constructor(numberOfGames, playerA, playerB) {
         this.numberOfGames = numberOfGames;
@@ -231,7 +238,6 @@ class TicTacToeSimulator{
                     move = this.playerB.getBestMove(ticTacToeGameState.getBoard(), ticTacToeGameState.getPlayer());
                 }
                 ticTacToeGameState = ticTacToeGameEngine.makeMove(ticTacToeGameState, move);
-                ticTacToeGameState.print();
             }
             switch(ticTacToeGameState.getStatus()) {
                 case 'win-x': winX++; break;
@@ -246,11 +252,10 @@ class TicTacToeSimulator{
     }
 }
 
-/*
+// Run the simulator
 ticTacToeSimulator = new TicTacToeSimulator(
-    1,
-    new IntelligentForceAI(),
-    new IntelligentForceAI()
+    100,                        // Set the number of games you want to run
+    new RandomPower(),          // Either choose new Randompower() or new IntelligentForceAI()
+    new IntelligentForceAI()    // Either choose new Randompower() or new IntelligentForceAI()
 );
-ticTacToeSimulator.run()
-*/
+ticTacToeSimulator.run();
