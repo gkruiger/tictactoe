@@ -6,7 +6,7 @@ class TicTacToeGameState {
         this.status = 'running';
     }
 
-    // Getters/setters
+    // Getters/setters jo
     getBoard() { return this.board; }
     getPlayer() { return this.player; }
     getStatus() { return this.status; }
