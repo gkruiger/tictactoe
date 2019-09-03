@@ -5,6 +5,8 @@ Exploring the concept of brute force in AI in my blog: https://www.ontdeksels.nl
 in which you play against an brute force AI, which by the way you can never win. 
 Live demo in my blog.
 
+![Demo screenshot](https://github.com/gkruiger/tictactoe/blob/master/screenshot.png "Demo screenshot")
+
 - tictactoe.html
 - tictactoe.js
 - tictactoesimulator.js (hosts the AI part)
